@@ -1,4 +1,5 @@
 const {crawlPage} = require('./crawl.js');
+const {printReport} = require('./report.js');
 
 // Driver
 async function main() {
@@ -20,10 +21,11 @@ async function main() {
 
     const pages = await crawlPage(baseURL, baseURL, {}); // will take the same URL twice to start the recursive crawl, and an empty object
 
-    for (const page of Object.entries(pages)) {
-        console.log(page);
-    }
+    // for (const page of Object.entries(pages)) {
+    //     console.log(page);
+    // }
 
+    printReport(pages);
 }
 
 main();

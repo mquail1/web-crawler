@@ -19,7 +19,7 @@ test('normalizeURL strip protocol', () => {
     const expected = 'twitch.tv/barry'; // expected output for function
     
     // expect Jest import
-    expect(actual).toEqual(expected) // expect(actual) should be equal to the value in 'expected'
+    expect(actual).toEqual(expected); // expect(actual) should be equal to the value in 'expected'
 
 });
 
@@ -29,7 +29,7 @@ test('normalizeURL strip trailing slashes', () => {
     const actual = normalizeURL(input);
     const expected = 'twitch.tv/barry';
     
-    expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected);
 });
 
 test('normalizeURL capitals', () => {
@@ -38,7 +38,7 @@ test('normalizeURL capitals', () => {
     const actual = normalizeURL(input);
     const expected = 'twitch.tv/barry';
     
-    expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected);
 });
 
 //* ----------- getURLfromHTML() -----------
@@ -56,7 +56,7 @@ test('getURLfromHTML absolute URLs', () => {
     const actual = getURLfromHTML(inputHTMLBody, inputBaseURL);
     const expected = ["https://www.twitch.tv/Barry"];
     
-    expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected);
 });
 
 // instead of a full URL, only includes a path
@@ -73,7 +73,7 @@ test('getURLfromHTML relative URLs', () => {
     const actual = getURLfromHTML(inputHTMLBody, inputBaseURL);
     const expected = ["https://www.twitch.tv/Barry/path/"];
     
-    expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected);
 });
 
 test('getURLfromHTML mixed URL types', () => {
@@ -90,7 +90,7 @@ test('getURLfromHTML mixed URL types', () => {
     const actual = getURLfromHTML(inputHTMLBody, inputBaseURL);
     const expected = ["https://www.twitch.tv/Barry/path1/", "https://www.twitch.tv/barry"];
     
-    expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected);
 });
 
 test('getURLfromHTML disclude bad URLS', () => {
@@ -106,5 +106,5 @@ test('getURLfromHTML disclude bad URLS', () => {
     const actual = getURLfromHTML(inputHTMLBody, inputBaseURL);
     const expected = [];
     
-    expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected);
 });
