@@ -63,10 +63,43 @@ function getURLfromHTML(htmlBody, baseURL) {
     return urls;
 }
 
+async function crawlPage(currentURL) {
+
+    console.log(`Starting crawl of ${currentURL}...`);
+
+
+    try {
+        // GET request
+        const response = await fetch(currentURL);
+
+        // Check response code
+        if (response.status > 399) {
+            console.log(`Error during fetch with status: ${response.status}`);
+            return;
+        }
+        
+        // parse headers to determine if response body is actually html
+        const contentType = response.headers.get("content-type");
+
+        // need "includes" (could also contain charset=UTF-8)
+        if (!contentType.includes("text/html")) {
+            console.log(`Error during fetch: Non-HTML response returned. Content type: ${contentType}`);
+        }
+
+        console.log(`Response body: ${await response.text()}`);
+    }
+
+    catch (error) {
+        console.log(`--- Error during fetch request: ${error.message}`);
+    }
+
+}
+
 // Exports the given functions to other scripts
 module.exports = {
 
     normalizeURL,
-    getURLfromHTML
+    getURLfromHTML,
+    crawlPage
 
 }
