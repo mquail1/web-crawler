@@ -63,10 +63,29 @@ function getURLfromHTML(htmlBody, baseURL) {
     return urls;
 }
 
-async function crawlPage(currentURL) {
+async function crawlPage(baseURL, currentURL, pages) {
 
-    console.log(`Starting crawl of ${currentURL}...`);
+    const baseURLObject = new URL(baseURL);
+    const currentURLObject = new URL(currentURL);
 
+    // Check hostnames are not the same
+    if (baseURLObject.hostname !== currentURLObject.hostname) {
+        return pages;
+    }
+
+    // Check if pages was already crawled
+    const normalizedCurrentURL = normalizeURL(currentURL);
+
+    // To check if page was already crawled: normalizedCurrentURL would be in the pages object
+    if (pages[normalizedCurrentURL] > 0) {
+        pages[normalizedCurrentURL]++; // increment the # of times page has been seen
+        return pages;
+    }
+
+    // initialize pages object with URL
+    pages[normalizedCurrentURL] = 1;
+
+    console.log(`Actively crawling: ${currentURL}`);
 
     try {
         // GET request
@@ -75,7 +94,7 @@ async function crawlPage(currentURL) {
         // Check response code
         if (response.status > 399) {
             console.log(`Error during fetch with status: ${response.status}`);
-            return;
+            return pages;
         }
         
         // parse headers to determine if response body is actually html
@@ -84,15 +103,29 @@ async function crawlPage(currentURL) {
         // need "includes" (could also contain charset=UTF-8)
         if (!contentType.includes("text/html")) {
             console.log(`Error during fetch: Non-HTML response returned. Content type: ${contentType}`);
+            return pages;
         }
 
-        console.log(`Response body: ${await response.text()}`);
+        // save response body in variable
+        const htmlBody = await response.text();
+
+        // extract all links from html
+        const nextURLs = getURLfromHTML(htmlBody, baseURL);
+
+        // Iterate over next URLs variable
+        for (const nextURL of nextURLs) {
+            // recursively crawl through nextURL item of array
+            pages = await crawlPage(baseURL, nextURL, pages);
+        }
     }
 
     catch (error) {
         console.log(`--- Error during fetch request: ${error.message}`);
+        // return pages;
     }
 
+    // Once recursive crawling is satisfied, return pages object
+    return pages;
 }
 
 // Exports the given functions to other scripts
